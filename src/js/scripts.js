@@ -15,6 +15,7 @@ let numberOfCards = 0;
 let numberOfTurns = 0;
 let previousCard = "None"
 let pairsMatched = 0;
+let lockBoard = false;
 
 gameStarter ();
 
@@ -36,22 +37,24 @@ function gameStarter() {
     
     gameList.sort(comparator);
     
-    timeID = setInterval(babyOneMoreTime, 1000);
+    timeID = setInterval(hitMeBabyOneMoreTime, 1000);
 }
-
-function babyOneMoreTime() {
-    time++;
-    document.querySelector("span").innerHTML = time;
-}
-
 
 function comparator() {
     return Math.random() - 0.5;
 }
 
+function hitMeBabyOneMoreTime() {
+    time++;
+    document.querySelector("span").innerHTML = time;
+}
+
 function gamePlaying(element) {
     const cardImage = element.querySelector("img");
     
+    if (lockBoard) {
+        return;
+    }
     if (element.classList.contains("unturned")) {
         turnCard(element, cardImage, gameList[element.id-1]);
         numberOfTurns++;
@@ -73,9 +76,11 @@ function gamePlaying(element) {
             return;
         } 
 
+        lockBoard = true;
         setTimeout(turnCard, 1000, previousCard[0], previousCard[1], coverGif);
 
         if( previousCard[0].id != element.id) {
+            lockBoard = true;
             setTimeout(turnCard, 1000, element, cardImage, coverGif);
         } else {
             previousCard = "None";
@@ -89,6 +94,9 @@ function gamePlaying(element) {
 function turnCard(cardElement, imageElement, imageSRC) {
     imageElement.src = imageSRC;
     cardElement.classList.toggle("unturned");
+    if (lockBoard) {
+        lockBoard = false;
+    }
 }
 
 function askForRestart() {
