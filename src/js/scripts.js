@@ -1,10 +1,4 @@
 const coverGif = "src/images/front.png";
-const gameList = []
-let time = 0;
-let timeID = 0;
-let numberOfTurns = 0;
-let previousCard = "None"
-let pairsMatched = 0;
 let gifsList = [
     "src/images/bobrossparrot.gif",
     "src/images/explodyparrot.gif",
@@ -14,26 +8,37 @@ let gifsList = [
     "src/images/tripletsparrot.gif",
     "src/images/unicornparrot.gif"    
 ];
+let gameList = []
+let time = 0;
+let timeID = 0;
+let numberOfCards = 0;
+let numberOfTurns = 0;
+let previousCard = "None"
+let pairsMatched = 0;
 
-let numberOfCards = prompt("Com quantas cartas você quer jogar?\n*Apenas números pares\n(Mínimo: 4 cartas - Máximo: 14 cartas)");
+gameStarter ();
 
-while (numberOfCards < 4 || numberOfCards > 14 || numberOfCards%2 != 0) {
+function gameStarter() {
     numberOfCards = prompt("Com quantas cartas você quer jogar?\n*Apenas números pares\n(Mínimo: 4 cartas - Máximo: 14 cartas)");
-} 
 
-for (let i = 0; i < numberOfCards/2; i++) {
-    gameList.push(gifsList[i]);
-    gameList.push(gifsList[i]);
+    while (numberOfCards < 4 || numberOfCards > 14 || numberOfCards%2 != 0) {
+        numberOfCards = prompt("Com quantas cartas você quer jogar?\n*Apenas números pares\n(Mínimo: 4 cartas - Máximo: 14 cartas)");
+    } 
+    
+    for (let i = 0; i < numberOfCards/2; i++) {
+        gameList.push(gifsList[i]);
+        gameList.push(gifsList[i]);
+    }
+    
+    for (let i = 0; i < numberOfCards; i++) {
+        document.querySelector(".cardDisplay").innerHTML += `<li onclick="gamePlaying(this)" id="${i+1}" class="card unturned"><img src="src/images/front.png" alt="desenho de um papagaio verde, de bico amarelo e laranja, e barriga vermelha e azul, usado como verso de todas as cartas, que é substituido pela figura de papagaio psicodélico escolhida aleatóriamente escondida depois que a carta é clicada"></li>`;
+    }
+    
+    gameList.sort(comparator);
+    
+    timeID = setInterval(babyOneMoreTime, 1000);
 }
 
-for (let i = 0; i < numberOfCards; i++) {
-    document.querySelector(".cardDisplay").innerHTML += `<li onclick="gamePlaying(this)" id="${i+1}" class="card unturned"><img src="src/images/front.png" alt="desenho de um papagaio verde, de bico amarelo e laranja, e barriga vermelha e azul, usado como verso de todas as cartas, que é substituido pela figura de papagaio psicodélico escolhida aleatóriamente escondida depois que a carta é clicada"></li>`;
-}
-
-gameList.sort(comparator);
-console.log(gameList);
-
-timeID = setInterval(babyOneMoreTime, 1000);
 function babyOneMoreTime() {
     time++;
     document.querySelector("span").innerHTML = time;
@@ -63,10 +68,13 @@ function gamePlaying(element) {
             if (pairsMatched === numberOfCards/2) {
                 clearInterval(timeID);
                 setTimeout(alert, 50, `Você ganhou em ${numberOfTurns} jogadas e levou ${time} segundos para concluir`);
+                setTimeout(askForRestart, 51);
             }
             return;
         } 
+
         setTimeout(turnCard, 1000, previousCard[0], previousCard[1], coverGif);
+
         if( previousCard[0].id != element.id) {
             setTimeout(turnCard, 1000, element, cardImage, coverGif);
         } else {
@@ -81,4 +89,21 @@ function gamePlaying(element) {
 function turnCard(cardElement, imageElement, imageSRC) {
     imageElement.src = imageSRC;
     cardElement.classList.toggle("unturned");
+}
+
+function askForRestart() {
+    let answer = prompt ("Você quer jogar de novo?\n(Responda sim ou não)");
+    if (answer==="sim") {
+        gameReseter();
+        gameStarter();
+    }
+}
+
+function gameReseter() {
+    document.querySelector(".cardDisplay").innerHTML = "";
+    gameList = [];
+    numberOfCards = 0;
+    numberOfTurns = 0;
+    previousCard = "None";
+    pairsMatched = 0;
 }
