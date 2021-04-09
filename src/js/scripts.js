@@ -92,8 +92,8 @@ function gamePlaying(element) {
 }
 
 function turnCard(cardElement, imageElement, imageSRC) {
-    imageElement.src = imageSRC;
     cardElement.classList.toggle("unturned");
+    imageElement.src = imageSRC;
     if (lockBoard) {
         lockBoard = false;
     }

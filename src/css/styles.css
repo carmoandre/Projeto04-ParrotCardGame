@@ -46,6 +46,16 @@ span {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 0.5s;
+  transform-style: preserve-3d;
+}
+
+.showBackFace {
+  transform: rotateY(180deg);
+}
+
+.showFrontFace {
+  transform: rotateY(-180deg);
 }
 
 .card img {
@@ -58,9 +68,13 @@ span {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   p {
     font-size: 36px;
+  }
+
+  span {
+    right: 20px;
   }
 
   .desktopTitle {
@@ -76,6 +90,10 @@ span {
 }
 
 @media (max-width: 350px) {
+  span {
+    right: 10px;
+  }
+
   .card {
     margin-left: 55px;
     margin-right: 55px;
