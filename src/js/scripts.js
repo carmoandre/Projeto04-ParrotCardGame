@@ -1,5 +1,7 @@
 const coverGif = "src/images/front.png";
 const gameList = []
+let time = 0;
+let timeID = 0;
 let numberOfTurns = 0;
 let previousCard = "None"
 let pairsMatched = 0;
@@ -31,13 +33,15 @@ for (let i = 0; i < numberOfCards; i++) {
 gameList.sort(comparator);
 console.log(gameList);
 
-function comparator() {
-    return Math.random() - 0.5;
+timeID = setInterval(babyOneMoreTime, 1000);
+function babyOneMoreTime() {
+    time++;
+    document.querySelector("span").innerHTML = time;
 }
 
-function turnCard(cardElement, imageElement, imageSRC) {
-    imageElement.src = imageSRC;
-    cardElement.classList.toggle("unturned");
+
+function comparator() {
+    return Math.random() - 0.5;
 }
 
 function gamePlaying(element) {
@@ -57,7 +61,8 @@ function gamePlaying(element) {
             previousCard = [element, cardImage];
             
             if (pairsMatched === numberOfCards/2) {
-                setTimeout(alert, 50, `Você ganhou em ${numberOfTurns} jogadas`);
+                clearInterval(timeID);
+                setTimeout(alert, 50, `Você ganhou em ${numberOfTurns} jogadas e levou ${time} segundos para concluir`);
             }
             return;
         } 
@@ -73,3 +78,7 @@ function gamePlaying(element) {
     previousCard = [element, cardImage];
 }
 
+function turnCard(cardElement, imageElement, imageSRC) {
+    imageElement.src = imageSRC;
+    cardElement.classList.toggle("unturned");
+}
